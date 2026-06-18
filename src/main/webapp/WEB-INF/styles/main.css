@@ -251,3 +251,37 @@ tr:hover {
 .action-buttons a {
     margin-right: 10px;
 }
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.close-alert {
+    float: right;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: inherit;
+    opacity: 0.7;
+}
+.close-alert:hover {
+    opacity: 1;
+}

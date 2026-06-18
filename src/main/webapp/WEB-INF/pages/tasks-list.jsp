@@ -11,6 +11,32 @@
 </head>
 <body>
     <%@include file="header.html"%>
+    <%-- Повідомлення про успіх --%>
+    <%
+        String successMessage = (String) session.getAttribute("success");
+        if (successMessage != null && !successMessage.isEmpty()) {
+    %>
+    <div class="alert alert-success" id="successAlert">
+        <button type="button" class="close-alert" onclick="closeAlert('successAlert')">&times;</button>
+        <strong>Success!</strong> <%= successMessage %>
+    </div>
+    <%
+            session.removeAttribute("success");
+        }
+    %>
+    <%-- Повідомлення про помилку--%>
+    <%
+        String errorMessage = (String) session.getAttribute("error");
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+    %>
+    <div class="alert alert-danger" id="errorAlert">
+        <button type="button" class="close-alert" onclick="closeAlert('errorAlert')">&times;</button>
+        <strong>Error!</strong> <%= errorMessage %>
+    </div>
+    <%
+            session.removeAttribute("error");
+        }
+    %>
     <table>
         <tr>
             <th>No.</th>

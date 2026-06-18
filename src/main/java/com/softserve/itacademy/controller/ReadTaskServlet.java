@@ -46,9 +46,4 @@ public class ReadTaskServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
         }
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-        // Optional: Logic for handling POST requests if needed
-    }
 }
