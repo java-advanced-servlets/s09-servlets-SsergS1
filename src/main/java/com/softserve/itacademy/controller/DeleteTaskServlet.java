@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -28,33 +29,40 @@ public class DeleteTaskServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
 
+        // Проверка наличия ID
         if (idParam == null || idParam.isEmpty()) {
-            request.getSession().setAttribute("error", "Task ID is required!");
-            response.sendRedirect(request.getContextPath() + "/tasks-list");
+            request.setAttribute("message", "Task ID is missing!");
+            request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
             return;
         }
 
         try {
             int id = Integer.parseInt(idParam);
+
+            // Проверяем, существует ли задача
             if (taskRepository.read(id) == null) {
-                request.getSession().setAttribute("error", "Task with ID " + id + " not found!");
-                response.sendRedirect(request.getContextPath() + "/tasks-list");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                request.setAttribute("message", "Task with ID '" + id + "' not found!");
+                request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
                 return;
             }
 
             boolean deleted = taskRepository.delete(id);
 
-            if (deleted) {
-                request.getSession().setAttribute("success", "Task successfully deleted!");
-            } else {
-                request.getSession().setAttribute("error", "Failed to delete task!");
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                if (deleted) {
+                    session.setAttribute("success", "Task successfully deleted!");
+                } else {
+                    session.setAttribute("error", "Failed to delete task!");
+                }
             }
 
             response.sendRedirect(request.getContextPath() + "/tasks-list");
 
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("error", "Invalid task ID format!");
-            response.sendRedirect(request.getContextPath() + "/tasks-list");
+            request.setAttribute("message", "Invalid Task ID format!");
+            request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
         }
     }
 }
