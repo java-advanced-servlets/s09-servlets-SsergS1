@@ -29,7 +29,6 @@ public class DeleteTaskServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idParam = request.getParameter("id");
 
-        // Проверка наличия ID
         if (idParam == null || idParam.isEmpty()) {
             request.setAttribute("message", "Task ID is missing!");
             request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
@@ -39,7 +38,6 @@ public class DeleteTaskServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idParam);
 
-            // Проверяем, существует ли задача
             if (taskRepository.read(id) == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 request.setAttribute("message", "Task with ID '" + id + "' not found!");
