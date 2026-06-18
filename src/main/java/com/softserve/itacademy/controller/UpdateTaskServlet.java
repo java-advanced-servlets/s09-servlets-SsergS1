@@ -26,11 +26,32 @@ public class UpdateTaskServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Task task = taskRepository.read(id);
-        request.setAttribute("task", task);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/edit-task.jsp");
-        requestDispatcher.forward(request, response);
+        String idStr = request.getParameter("id");
+
+        if (idStr == null || idStr.isEmpty()) {
+            request.setAttribute("message", "Task ID is missing!");
+            request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(idStr);
+            Task task = taskRepository.read(id);
+
+            if (task != null) {
+                request.setAttribute("task", task);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/pages/edit-task.jsp");
+                requestDispatcher.forward(request, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                request.setAttribute("message", "Task with ID '" + id + "' not found!");
+                request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
+            }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid Task ID format!");
+            request.getRequestDispatcher("/WEB-INF/pages/error.jsp").forward(request, response);
+        }
     }
 
     @Override
